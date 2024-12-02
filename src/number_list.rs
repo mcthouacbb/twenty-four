@@ -1,7 +1,7 @@
 use core::fmt;
 use std::collections::{btree_map, BTreeMap};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct NumberList {
     frequencies: BTreeMap<i32, i32>,
     len: usize,

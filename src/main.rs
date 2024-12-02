@@ -1,6 +1,9 @@
 use std::{io, str::SplitWhitespace};
 
+use number_list::NumberList;
+
 mod number_list;
+mod solver;
 
 fn solve_command(tokens: SplitWhitespace<'_>) {
     todo!();
