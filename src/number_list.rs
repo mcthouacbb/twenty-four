@@ -1,7 +1,7 @@
 use core::fmt;
 use std::collections::{btree_map, BTreeMap};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct NumberList {
     frequencies: BTreeMap<i32, i32>,
     len: usize,
@@ -75,18 +75,18 @@ impl<'a> IntoIterator for &'a NumberList {
 }
 
 impl fmt::Display for NumberList {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		write!(f, "NumberList {{")?;
-		let mut iter = self.into_iter();
-		if let Some(val) = iter.next() {
-			write!(f, "{}", val)?;
-			for v in iter {
-				write!(f, ", {}", v)?;
-			}
-		}
-		write!(f, "}}")?;
-		Ok(())
-	}
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "NumberList {{")?;
+        let mut iter = self.into_iter();
+        if let Some(val) = iter.next() {
+            write!(f, "{}", val)?;
+            for v in iter {
+                write!(f, ", {}", v)?;
+            }
+        }
+        write!(f, "}}")?;
+        Ok(())
+    }
 }
 
 #[derive(Clone, Debug)]
