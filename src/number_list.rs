@@ -1,5 +1,7 @@
+use core::fmt;
 use std::collections::{btree_map, BTreeMap};
 
+#[derive(Clone, Debug)]
 pub struct NumberList {
     frequencies: BTreeMap<i32, i32>,
     len: usize,
@@ -72,6 +74,22 @@ impl<'a> IntoIterator for &'a NumberList {
     }
 }
 
+impl fmt::Display for NumberList {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		write!(f, "NumberList {{")?;
+		let mut iter = self.into_iter();
+		if let Some(val) = iter.next() {
+			write!(f, "{}", val)?;
+			for v in iter {
+				write!(f, ", {}", v)?;
+			}
+		}
+		write!(f, "}}")?;
+		Ok(())
+	}
+}
+
+#[derive(Clone, Debug)]
 pub struct NumberListIter<'a> {
     iter: btree_map::Iter<'a, i32, i32>,
     curr_entry: Option<(i32, i32)>,
@@ -103,6 +121,7 @@ impl<'a> Iterator for NumberListIter<'a> {
     }
 }
 
+#[derive(Clone, Debug)]
 pub struct NumberPairIter<'a> {
     outer: btree_map::Iter<'a, i32, i32>,
     curr_outer: Option<i32>,
