@@ -1,5 +1,7 @@
 use std::{io, str::SplitWhitespace};
 
+mod solver;
+
 fn solve_command(tokens: SplitWhitespace<'_>) {
     todo!();
 }
