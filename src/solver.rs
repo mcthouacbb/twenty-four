@@ -1,9 +1,3 @@
+pub struct Solver {}
 
-
-pub struct Solver {
-
-}
-
-impl Solver {
-
-}
+impl Solver {}
