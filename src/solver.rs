@@ -7,14 +7,14 @@ use crate::op::{Operation, Reduce};
 #[derive(Clone, Debug)]
 pub struct Solver {
     base: NumberList,
-    solution_graph: Graph
+    solution_graph: Graph,
 }
 
 impl Solver {
     pub fn new(base: NumberList) -> Self {
         Solver {
             base: base,
-            solution_graph: Graph::new()
+            solution_graph: Graph::new(),
         }
     }
 
