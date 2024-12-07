@@ -111,7 +111,7 @@ impl<'a> Iterator for EdgeIter<'a> {
 }
 
 pub struct Dot<'a> {
-    graph: &'a Graph
+    graph: &'a Graph,
 }
 
 impl<'a> Dot<'a> {
@@ -129,7 +129,11 @@ impl<'a> fmt::Display for Dot<'a> {
         }
         for node_id in g.all_nodes() {
             for edge in g.node_edges(node_id) {
-                writeln!(f, "    {} -> {} [label=\"{}\"]", edge.src, edge.dst, edge.data)?;
+                writeln!(
+                    f,
+                    "    {} -> {} [label=\"{}\"]",
+                    edge.src, edge.dst, edge.data
+                )?;
             }
         }
         writeln!(f, "}}")

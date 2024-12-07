@@ -67,7 +67,12 @@ impl Solver {
         println!("{}", Dot::new(&pruned));
     }
 
-    fn check_reachability(graph: &Graph, curr_node: NodeId, reach_map: &mut Vec<bool>, target: i32) -> bool {
+    fn check_reachability(
+        graph: &Graph,
+        curr_node: NodeId,
+        reach_map: &mut Vec<bool>,
+        target: i32,
+    ) -> bool {
         let data = graph.node_data(curr_node);
         if data.len() == 1 {
             let reaches = data.single_val() == target;
@@ -94,7 +99,11 @@ impl Solver {
             if *reaches {
                 for edge in graph.node_edges(id as NodeId) {
                     if reach_map[edge.dst() as usize] {
-                        pruned.add_edge(id_map[edge.src() as usize], id_map[edge.dst() as usize], edge.data())
+                        pruned.add_edge(
+                            id_map[edge.src() as usize],
+                            id_map[edge.dst() as usize],
+                            edge.data(),
+                        )
                     }
                 }
             }
