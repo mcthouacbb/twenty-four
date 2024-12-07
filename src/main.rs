@@ -27,6 +27,7 @@ fn solve_command(mut tokens: SplitWhitespace<'_>) {
     println!("Solving {} for {}", nums, target);
     // TODO: actually use target
     let mut solver = Solver::new(nums.clone());
+    // let solver = Solver::new(NumberList::new(&vec![8, 4, 7, 9]));
     // let solver = Solver::new(NumberList::new(&vec![3, 4, 5]));
     // let solver = Solver::new(NumberList::new(&vec![7, 2, 4, 8]));
     solver.solve();
