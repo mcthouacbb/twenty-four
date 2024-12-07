@@ -8,6 +8,7 @@ pub type EdgeData = Reduce;
 pub type NodeId = u32;
 pub type EdgeId = u32;
 
+#[derive(Debug, Clone)]
 pub struct Edge {
     src: NodeId,
     dst: NodeId,
@@ -26,12 +27,14 @@ impl Edge {
     }
 }
 
+#[derive(Debug, Clone)]
 pub struct Node {
     data: NodeData,
     // only contains edges starting from this node
     edges: Vec<Edge>,
 }
 
+#[derive(Debug, Clone)]
 pub struct Graph {
     nodes: Vec<Node>,
     node_map: HashMap<NodeData, NodeId>,

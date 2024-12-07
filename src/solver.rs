@@ -1,6 +1,4 @@
-use core::fmt;
 use std::collections::HashSet;
-use std::process::id;
 
 use crate::graph::{Dot, Graph, NodeId};
 use crate::number_list::NumberList;
@@ -9,14 +7,26 @@ use crate::op::{Operation, Reduce};
 #[derive(Clone, Debug)]
 pub struct Solver {
     base: NumberList,
+    solution_graph: Graph
 }
 
 impl Solver {
     pub fn new(base: NumberList) -> Self {
-        Solver { base: base }
+        Solver {
+            base: base,
+            solution_graph: Graph::new()
+        }
     }
 
-    pub fn solve(&self) {
+    pub fn print_graph(&self) {
+        println!("{}", Dot::new(&self.solution_graph));
+    }
+
+    pub fn print_solutions(&self) {
+        todo!();
+    }
+
+    pub fn solve(&mut self) {
         let mut graph = Graph::new();
         let root = graph.add_node(&self.base);
         let mut layer = HashSet::new();
@@ -52,8 +62,6 @@ impl Solver {
             std::mem::swap(&mut prev_layer, &mut layer);
         }
 
-        // println!("{}", Dot::new(&graph));
-
         let mut reach_map = vec![false; graph.num_nodes() as usize];
 
         Self::check_reachability(&graph, root, &mut reach_map, 24);
@@ -64,7 +72,7 @@ impl Solver {
         }
 
         let pruned = Self::prune_graph(&graph, &reach_map);
-        println!("{}", Dot::new(&pruned));
+        self.solution_graph = pruned;
     }
 
     fn check_reachability(
