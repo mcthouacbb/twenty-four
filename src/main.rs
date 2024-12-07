@@ -11,6 +11,7 @@ mod solver;
 fn solve_command(tokens: SplitWhitespace<'_>) {
     let solver = Solver::new(NumberList::new(&vec![8, 4, 7, 9]));
     // let solver = Solver::new(NumberList::new(&vec![3, 4, 5]));
+    // let solver = Solver::new(NumberList::new(&vec![7, 2, 4, 8]));
     solver.solve();
     todo!();
 }
