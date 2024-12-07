@@ -3,10 +3,14 @@ use std::{io, str::SplitWhitespace};
 use number_list::NumberList;
 use solver::Solver;
 
+mod graph;
 mod number_list;
+mod op;
 mod solver;
 
 fn solve_command(tokens: SplitWhitespace<'_>) {
+    let solver = Solver::new(NumberList::new(&vec![3, 4, 5]));
+    solver.solve();
     todo!();
 }
 
