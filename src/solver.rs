@@ -1,7 +1,8 @@
 use core::fmt;
 use std::collections::HashSet;
+use std::process::id;
 
-use crate::graph::{Dot, Graph};
+use crate::graph::{Dot, Graph, NodeId};
 use crate::number_list::NumberList;
 use crate::op::{Operation, Reduce};
 
@@ -51,6 +52,54 @@ impl Solver {
             std::mem::swap(&mut prev_layer, &mut layer);
         }
 
-        println!("{}", Dot::new(&graph));
+        // println!("{}", Dot::new(&graph));
+
+        let mut reach_map = vec![false; graph.num_nodes() as usize];
+
+        Self::check_reachability(&graph, root, &mut reach_map, 24);
+        if reach_map[root as usize] {
+            println!("Can reach 24");
+        } else {
+            println!("Cannot reach 24");
+        }
+
+        let pruned = Self::prune_graph(&graph, &reach_map);
+        println!("{}", Dot::new(&pruned));
+    }
+
+    fn check_reachability(graph: &Graph, curr_node: NodeId, reach_map: &mut Vec<bool>, target: i32) -> bool {
+        let data = graph.node_data(curr_node);
+        if data.len() == 1 {
+            let reaches = data.single_val() == target;
+            reach_map[curr_node as usize] = reaches;
+            return reaches;
+        }
+        let mut reaches = false;
+        for edge in graph.node_edges(curr_node) {
+            reaches |= Self::check_reachability(graph, edge.dst(), reach_map, target);
+        }
+        reach_map[curr_node as usize] = reaches;
+        reaches
+    }
+
+    fn prune_graph(graph: &Graph, reach_map: &Vec<bool>) -> Graph {
+        let mut id_map = vec![0 as NodeId; reach_map.len()];
+        let mut pruned = Graph::new();
+        for (id, reaches) in reach_map.iter().enumerate() {
+            if *reaches || id == 0 {
+                id_map[id] = pruned.add_node(graph.node_data(id as NodeId));
+            }
+        }
+        for (id, reaches) in reach_map.iter().enumerate() {
+            if *reaches {
+                for edge in graph.node_edges(id as NodeId) {
+                    if reach_map[edge.dst() as usize] {
+                        pruned.add_edge(id_map[edge.src() as usize], id_map[edge.dst() as usize], edge.data())
+                    }
+                }
+            }
+        }
+
+        pruned
     }
 }

@@ -24,6 +24,11 @@ impl NumberList {
         list
     }
 
+    pub fn single_val(&self) -> i32 {
+        debug_assert!(self.len() == 1);
+        *self.frequencies.first_key_value().unwrap().0
+    }
+
     pub fn len(&self) -> usize {
         self.len
     }

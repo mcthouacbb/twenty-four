@@ -14,6 +14,18 @@ pub struct Edge {
     data: EdgeData,
 }
 
+impl Edge {
+    pub fn src(&self) -> NodeId {
+        self.src
+    }
+    pub fn dst(&self) -> NodeId {
+        self.dst
+    }
+    pub fn data(&self) -> &EdgeData {
+        &self.data
+    }
+}
+
 pub struct Node {
     data: NodeData,
     // only contains edges starting from this node
