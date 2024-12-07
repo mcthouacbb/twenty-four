@@ -37,6 +37,7 @@ impl NumberList {
         NumberPairIter {
             outer: self.frequencies.iter(),
             curr_outer: None,
+            checked_double: false,
             inner: self.frequencies.iter(),
         }
     }
@@ -129,7 +130,8 @@ impl<'a> Iterator for NumberListIter<'a> {
 #[derive(Clone, Debug)]
 pub struct NumberPairIter<'a> {
     outer: btree_map::Iter<'a, i32, i32>,
-    curr_outer: Option<i32>,
+    curr_outer: Option<(i32, i32)>,
+    checked_double: bool,
     inner: btree_map::Iter<'a, i32, i32>,
 }
 
@@ -138,8 +140,8 @@ impl<'a> Iterator for NumberPairIter<'a> {
     fn next(&mut self) -> Option<Self::Item> {
         if self.curr_outer.is_none() {
             match self.outer.next() {
-                Some((k, _v)) => {
-                    self.curr_outer = Some(*k);
+                Some((k, v)) => {
+                    self.curr_outer = Some((*k, *v));
                     self.inner = self.outer.clone()
                 }
                 None => {
@@ -147,12 +149,20 @@ impl<'a> Iterator for NumberPairIter<'a> {
                 }
             }
         }
+        if !self.checked_double {
+            self.checked_double = true;
+            if self.curr_outer.unwrap().1 >= 2 {
+                let val = self.curr_outer.unwrap().0;
+                return Some((val, val))
+            }
+        }
         match self.inner.next() {
-            Some((k, _v)) => Some((self.curr_outer.unwrap(), *k)),
+            Some((k, _v)) => Some((self.curr_outer.unwrap().0, *k)),
             None => match self.outer.next() {
-                Some((k, _v)) => {
-                    self.curr_outer = Some(*k);
+                Some((k, v)) => {
+                    self.curr_outer = Some((*k, *v));
                     self.inner = self.outer.clone();
+                    self.checked_double = false;
                     self.next()
                 }
                 None => None,
@@ -199,6 +209,22 @@ mod tests {
         }
 
         let list = NumberList::new(&vec![6, 6, 3, 3, 3, 7, 1, 1, 4, 4, 4, 4]);
+        let expected = [
+            (1, 1),
+            (1, 3),
+            (1, 4),
+            (1, 6),
+            (1, 7),
+            (3, 3),
+            (3, 4),
+            (3, 6),
+            (3, 7),
+            (4, 4),
+            (4, 6),
+            (4, 7),
+            (6, 6),
+            (6, 7),
+        ];
 
         assert_eq!(list.len(), 12);
         for (i, p) in list.unique_pairs().enumerate() {
