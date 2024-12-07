@@ -9,7 +9,7 @@ mod op;
 mod solver;
 
 fn solve_command(tokens: SplitWhitespace<'_>) {
-    let solver = Solver::new(NumberList::new(&vec![3, 4, 5]));
+    let solver = Solver::new(NumberList::new(&vec![8, 4, 7, 9]));
     solver.solve();
     todo!();
 }

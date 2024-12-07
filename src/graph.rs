@@ -1,5 +1,5 @@
-use core::slice;
-use std::collections::HashMap;
+use core::{fmt, slice};
+use std::{collections::HashMap, ops::Range};
 
 use crate::{number_list::NumberList, op::Reduce};
 
@@ -49,6 +49,10 @@ impl Graph {
         self.nodes.len() as u32
     }
 
+    pub fn all_nodes(&self) -> Range<NodeId> {
+        0..self.num_nodes()
+    }
+
     pub fn node_edges(&self, id: NodeId) -> EdgeIter {
         EdgeIter {
             iter: self.nodes[id as usize].edges.iter(),
@@ -91,5 +95,31 @@ impl<'a> Iterator for EdgeIter<'a> {
     type Item = &'a Edge;
     fn next(&mut self) -> Option<Self::Item> {
         self.iter.next()
+    }
+}
+
+pub struct Dot<'a> {
+    graph: &'a Graph
+}
+
+impl<'a> Dot<'a> {
+    pub fn new(graph: &'a Graph) -> Self {
+        Self { graph: graph }
+    }
+}
+
+impl<'a> fmt::Display for Dot<'a> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let g = self.graph;
+        writeln!(f, "digraph {{")?;
+        for node_id in g.all_nodes() {
+            writeln!(f, "    {} [label=\"{}\"]", node_id, g.node_data(node_id))?;
+        }
+        for node_id in g.all_nodes() {
+            for edge in g.node_edges(node_id) {
+                writeln!(f, "    {} -> {} [label=\"{}\"]", edge.src, edge.dst, edge.data)?;
+            }
+        }
+        writeln!(f, "}}")
     }
 }

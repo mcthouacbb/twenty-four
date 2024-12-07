@@ -1,7 +1,7 @@
 use core::fmt;
 use std::collections::HashSet;
 
-use crate::graph::Graph;
+use crate::graph::{Dot, Graph};
 use crate::number_list::NumberList;
 use crate::op::{Operation, Reduce};
 
@@ -50,5 +50,7 @@ impl Solver {
 
             std::mem::swap(&mut prev_layer, &mut layer);
         }
+
+        println!("{}", Dot::new(&graph));
     }
 }
